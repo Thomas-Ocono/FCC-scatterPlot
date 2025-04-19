@@ -22,6 +22,7 @@ const main = (data) => {
 
   const toSeconds = (time) => {
     const [min, sec] = time.split(":");
+
     return parseInt(min) * 60 + parseInt(sec);
   };
   let secondsArray = timeArray.map((d) => toSeconds(d));
@@ -41,11 +42,24 @@ const main = (data) => {
   svg
     .append("g")
     .call(xAxis)
-    .attr("transform", "translate(0, " + (height - padding) + ")");
+    .attr("transform", "translate(0, " + (height - padding) + ")")
+    .attr("id", "x-axis");
   svg
     .append("g")
     .call(yAxis)
-    .attr("transform", "translate(" + padding + ", 0)");
+    .attr("transform", "translate(" + padding + ", 0)")
+    .attr("id", "y-axis");
+  svg
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("data-xvalue", (d) => d.Year)
+    .attr("data-yvalue", (d) => d.Time)
+    .attr("r", 5)
+    .attr("cx", (d) => xScale(d.Year))
+    .attr("cy", (d) => yScale(toSeconds(d.Time)));
 };
 
 //to get the data, then runs main function
