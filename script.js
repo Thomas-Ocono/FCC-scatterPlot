@@ -60,9 +60,43 @@ const main = (data) => {
     .attr("class", "dot")
     .attr("data-xvalue", (d) => d.Year)
     .attr("data-yvalue", (d) => parseTime(d.Time))
-    .attr("r", 5)
+    .attr("r", 7)
     .attr("cx", (d) => xScale(d.Year))
-    .attr("cy", (d) => yScale(parseTime(d.Time)));
+    .attr("cy", (d) => yScale(parseTime(d.Time)))
+    .attr("stroke", "black")
+    .attr("stroke-width", 1)
+    .attr("fill", function (d) {
+      if (d.Doping == "") {
+        return "green";
+      } else {
+        return "red";
+      }
+    });
+  // creating the legend
+  const legend = svg
+    .append("g")
+    .attr("id", "legend")
+    .attr("transform", "translate(800,200)");
+  legend.append("g").append("text").text("Drug Use Allegations: ");
+  legend
+    .append("circle")
+    .attr("r", 7)
+    .attr("transform", "translate(160, -3.5)")
+    .attr("fill", "red")
+    .attr("stroke", "black")
+    .attr("stroke-width", 1);
+  legend
+    .append("g")
+    .append("text")
+    .text("No Drug Use Allegations: ")
+    .attr("transform", "translate(-23, 20)");
+  legend
+    .append("circle")
+    .attr("r", 7)
+    .attr("transform", "translate(161, 16.5)")
+    .attr("fill", "green")
+    .attr("stroke", "black")
+    .attr("stroke-width", 1);
 };
 
 //to get the data, then runs main function

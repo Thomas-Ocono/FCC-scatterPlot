@@ -4,3 +4,8 @@ body {
 #title {
   text-align: center;
 }
+svg {
+  border: solid black 5px;
+  border-radius: 10px;
+  filter: drop-shadow(10px 10px 10px);
+}
