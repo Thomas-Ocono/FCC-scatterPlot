@@ -5,7 +5,8 @@ let req = new XMLHttpRequest();
 let data;
 let height = 750;
 let width = 1000;
-let padding = 50;
+let padding = 75;
+const tooltip = document.getElementById("tooltip");
 
 const main = (data) => {
   const svg = d3
@@ -51,6 +52,16 @@ const main = (data) => {
     .attr("transform", "translate(" + padding + ", 0)")
     .attr("id", "y-axis");
 
+  //creating the tooltip
+  const tooltipText = (d) => {
+    return `${d.Name}, ${d.Nationality}<br>${d.Year}, ${d.Time}`;
+  };
+  let tooltip = d3
+    .select("body")
+    .append("div")
+    .attr("id", "tooltip")
+    .style("opacity", 0);
+
   //making the circles on the graph
   svg
     .selectAll("circle")
@@ -60,6 +71,7 @@ const main = (data) => {
     .attr("class", "dot")
     .attr("data-xvalue", (d) => d.Year)
     .attr("data-yvalue", (d) => parseTime(d.Time))
+    .style("opacity", ".75")
     .attr("r", 7)
     .attr("cx", (d) => xScale(d.Year))
     .attr("cy", (d) => yScale(parseTime(d.Time)))
@@ -71,7 +83,31 @@ const main = (data) => {
       } else {
         return "red";
       }
-    });
+    })
+    .on("mouseover", (d) => {
+      tooltip.style("opacity", 0.9);
+      tooltip.attr("data-year", d.Year);
+      tooltip
+        .html(tooltipText(d))
+        .style("position", "absolute")
+        .style("left", d3.event.pageX + 20 + "px")
+        .style("top", d3.event.pageY + "px");
+    })
+    .on("mouseout", (d) => tooltip.style("opacity", 0));
+  //add label to x and y axis
+  svg
+    .append("text")
+    .attr("id", "x-axis-label")
+    .text("Time in minutes")
+    .attr("transform", "translate(22,300)rotate(-90)")
+    .style("font-size", "23px");
+
+  svg
+    .append("text")
+    .attr("id", "y-axis-label")
+    .text("Years")
+    .attr("transform", "translate(475, 725)")
+    .style("font-size", "25px");
   // creating the legend
   const legend = svg
     .append("g")
@@ -93,7 +129,7 @@ const main = (data) => {
   legend
     .append("circle")
     .attr("r", 7)
-    .attr("transform", "translate(161, 16.5)")
+    .attr("transform", "translate(160.5, 16.5)")
     .attr("fill", "green")
     .attr("stroke", "black")
     .attr("stroke-width", 1);
